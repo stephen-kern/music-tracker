@@ -1,0 +1,21 @@
+{
+    "compilerOptions": {
+      "target": "ES6",
+      "module": "CommonJS",
+      "rootDir": "./src",  // Keep the rootDir as 'src'
+      "outDir": "./dist",
+      "strict": true,
+      "esModuleInterop": true,
+      "baseUrl": "./src",
+      "paths": {
+        "@api/*": ["api/*"],
+        "@controllers/*": ["controllers/*"],
+        "@services/*": ["services/*"],
+        "@config/*": ["config/*"],
+        "@types/*": ["types/*"]
+      }
+    },
+    "include": ["src/**/*"],  // Make sure to include everything under 'src'
+    "exclude": ["node_modules"]
+  }
+  

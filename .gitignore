@@ -1,0 +1,10 @@
+# Node.js dependencies
+node_modules/
+
+# TypeScript build files
+/backend/dist/
+/frontend/.next/
+/frontend/node_modules/
+
+# Environment variable files
+.env
