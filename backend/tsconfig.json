@@ -2,10 +2,11 @@
     "compilerOptions": {
       "target": "ES6",
       "module": "CommonJS",
-      "rootDir": "./src",  // Keep the rootDir as 'src'
+      "rootDir": "./src",  
       "outDir": "./dist",
       "strict": true,
       "esModuleInterop": true,
+      "skipLibCheck": true, 
       "baseUrl": "./src",
       "paths": {
         "@api/*": ["api/*"],
@@ -15,7 +16,7 @@
         "@types/*": ["types/*"]
       }
     },
-    "include": ["src/**/*"],  // Make sure to include everything under 'src'
+    "include": ["src"],  
     "exclude": ["node_modules"]
   }
   

@@ -1,10 +1,12 @@
-import { Router } from 'express';
-import { getArtistInfo } from '../controllers/musicController';
+import express from "express";
+import { Request, Response } from "express";
 
 
-const router = Router();
+const router = express.Router();
 
 // Route to get artist info
-router.get('/artist/:name', getArtistInfo);
+router.get('/test', (req: Request, res: Response) =>{
+    res.json({ message: "Music routes are working!" });
+});
 
 export default router;
