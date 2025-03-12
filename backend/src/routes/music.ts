@@ -28,7 +28,8 @@ router.get("/spotify/callback", async (req: Request, res: Response) => {
     const code = req.query.code as string;
 
     if (!code) {
-      return res.status(400).json({ error: "Missing authorization code" });
+      res.status(400).json({ error: "Missing authorization code" });
+      return;      
     }
 
     const tokenResponse = await axios.post(
