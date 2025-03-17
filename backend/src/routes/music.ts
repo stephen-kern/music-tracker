@@ -22,14 +22,16 @@ router.get("/spotify/login", (req: Request, res: Response) => {
   res.redirect(authUrl);
 });
 
-// Handle Spotify Callback
+// store the tokens in an object
+const userTokens: {
+  [key: string]: { accessToken: string; refreshToken: string };
+} = {};
 router.get("/spotify/callback", async (req: Request, res: Response) => {
   try {
     const code = req.query.code as string;
-
     if (!code) {
       res.status(400).json({ error: "Missing authorization code" });
-      return;      
+      return;
     }
 
     const tokenResponse = await axios.post(
@@ -48,18 +50,45 @@ router.get("/spotify/callback", async (req: Request, res: Response) => {
       }
     );
 
-    res.json(tokenResponse.data);
+    const { access_token, refresh_token } = tokenResponse.data;
+
+    // Store token temporarily (will update with db storage later)
+    userTokens[req.ip || "default"] = {
+      accessToken: access_token,
+      refreshToken: refresh_token,
+    };
+
+    res.json({
+      message: "Successfully authenticated",
+      access_token,
+      refresh_token,
+    });
   } catch (error: any) {
-    if (axios.isAxiosError(error)) {
-      console.error(
-        "Error getting tokens:",
-        error.response?.data || error.message
-      );
-      res.status(error.response?.status || 500).json({ error: error.message });
-    } else {
-      console.error("Error getting tokens:", error.response?.data || error);
-      res.status(500).json({ error: "Failed to get access token" });
+    console.error("Error getting tokens:", error.response?.data || error);
+    res.status(500).json({ error: "Failed to get access tokens" });
+  }
+});
+
+router.get("/spotify/profile", async (req: Request, res: Response) => {
+  try {
+    const userToken = userTokens[req.ip || "default"];
+    if (!userToken) {
+      res.status(401).json({ error: "User not authenticated" });
+      return;
     }
+
+    const response = await axios.get("https://api.spotify.com/v1/me", {
+      headers: {
+        Authorization: `Bearer ${userToken.accessToken}`,
+      },
+    });
+    res.json(response.data);
+  } catch (error: any) {
+    console.error(
+      "Error fetching user profile:",
+      error.response?.data || error
+    );
+    res.status(500).json({ error: "Failed to fetch user profile" });
   }
 });
 
